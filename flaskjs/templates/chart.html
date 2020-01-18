@@ -1,0 +1,125 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<style>
+table {
+  border-spacing: 0;
+  width: 50%;
+  border: 1px solid #ddd;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+  height: 10px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+</style>
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+  
+</head>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+  </center>
+  <center>
+  
+   <div style="overflow-x:auto;">
+    {% for table in tables %}
+                {{titles[loop.index]}}
+                {{ table|safe }}
+    {% endfor %}
+    </div>
+
+  
+    <canvas id="chart" width="600" height="400"></canvas>
+    <div style="width: 50%">
+    <canvas id="chart2" height="450" width="600"></canvas>
+    <canvas id="chart3" width="600" height="400"></canvas>
+</div>
+    <script>
+      // bar chart data
+      var barData = {
+        labels : [
+          {% for item in labels %}
+           "{{ item }}",
+          {% endfor %}
+	],
+
+        datasets : [{
+          fillColor: "rgba(151,187,205,0.2)",
+          strokeColor: "rgba(151,187,205,1)",
+          pointColor: "rgba(151,187,205,1)",
+          data : [
+            {% for item in values %}
+               "{{ item }}",
+              {% endfor %}
+	    ]
+          }
+        ]
+      };
+      
+    var pieData = [
+        {% for item, label, colors in set %}
+          {
+            value: {{item}},
+            label: "{{label}}",
+            color : "{{colors}}"
+          },
+        {% endfor %}
+      ];
+
+     // get bar chart canvas
+     var mychart = document.getElementById("chart").getContext("2d");
+     var mychart2 = document.getElementById("chart2").getContext("2d");
+     var mychart3 = document.getElementById("chart3").getContext("2d");
+
+       steps = 10
+       max = {{max}}
+
+     // draw bar chart
+     new Chart(mychart).Bar(barData, {
+       scaleOverride: true,
+       scaleSteps: steps,
+       scaleStepWidth: Math.ceil(max / steps),
+       scaleStartValue: 0,
+       scaleShowVerticalLines: true,
+       scaleShowGridLines : true,
+       barShowStroke : true,
+       scaleShowLabels: true
+       }
+     );
+     
+        var LineChartDemo = new Chart(mychart2).Line(barData, {
+        scaleOverride: true,
+        scaleSteps: steps,
+        scaleStepWidth: Math.ceil(max / steps),
+        scaleStartValue: 0,
+        scaleShowVerticalLines: true,
+        scaleShowGridLines : true,
+        barShowStroke : true,
+        scaleShowLabels: true,
+        bezierCurve: false,
+      });
+      
+    new Chart(document.getElementById("chart3").getContext("2d")).Pie(pieData);
+      
+      
+  
+
+    </script>
+  </center>
+</body>
+</html>
+
