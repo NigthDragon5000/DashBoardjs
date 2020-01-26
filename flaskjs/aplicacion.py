@@ -32,6 +32,7 @@ base=pd.DataFrame()
 base['month']=labels
 base['values']=values
 print(base)
+print('hola')
 
 @app.route('/')
 def bar():
