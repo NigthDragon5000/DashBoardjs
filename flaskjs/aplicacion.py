@@ -31,7 +31,7 @@ colors = [
 base=pd.DataFrame()
 base['month']=labels
 base['values']=values
-
+print(base)
 
 @app.route('/')
 def bar():
